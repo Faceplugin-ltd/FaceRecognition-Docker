@@ -7,7 +7,7 @@
 
 #  Face Recognition Docker - Fully On-Premise
 ## Overview
-Try our `Face Recognition SDK` top - ranked on NIST and FRVT.
+Explore `face recognition SDK` from [Faceplugin](https://faceplugin.com/) Top-ranked on NIST FRVT.
 <br>This is `on-premise SDK` which means everything is processed in your server and **NO** data leaves the device 
 <br></br>
 
