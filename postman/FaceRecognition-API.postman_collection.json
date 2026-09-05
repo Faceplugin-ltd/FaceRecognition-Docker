@@ -1,0 +1,183 @@
+{
+  "info": {
+    "_postman_id": "faceplugin-facerecognition-docker-0001",
+    "name": "FacePlugin FaceRecognition",
+    "description": "FacePlugin FaceRecognition API.\n\nbaseUrl defaults to port 8083 (host and container).\nLicense: prefer FP1. key via text/plain or JSON; legacy license.dat still works.\nAll routes are under /api/* (no version segment in the path).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8083"
+    },
+    {
+      "key": "imageB64",
+      "value": ""
+    },
+    {
+      "key": "image2B64",
+      "value": ""
+    },
+    {
+      "key": "feature1",
+      "value": ""
+    },
+    {
+      "key": "feature2",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Shared",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/health"
+          }
+        },
+        {
+          "name": "Version",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/backend"
+          }
+        },
+        {
+          "name": "Machine code",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/machinecode"
+          }
+        },
+        {
+          "name": "Activate (FP1. text)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "FP1.PASTE_YOUR_LICENSE_KEY_HERE"
+            },
+            "url": "{{baseUrl}}/api/activate",
+            "description": "Preferred: paste the FP1. key from FacePlugin (same content as license.txt)."
+          }
+        },
+        {
+          "name": "Activate (JSON)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"license\": \"FP1.PASTE_YOUR_LICENSE_KEY_HERE\"\n}"
+            },
+            "url": "{{baseUrl}}/api/activate"
+          }
+        }
+      ]
+    },
+    {
+      "name": "FaceRecognition",
+      "item": [
+        {
+          "name": "Detect",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"image\": \"{{imageB64}}\",\n  \"cropImage\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/detect"
+          }
+        },
+        {
+          "name": "Quality",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"image\": \"{{imageB64}}\",\n  \"cropImage\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/quality"
+          }
+        },
+        {
+          "name": "Feature",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"image\": \"{{imageB64}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/feature"
+          }
+        },
+        {
+          "name": "Match (1:1)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"image1\": \"{{imageB64}}\",\n  \"image2\": \"{{image2B64}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/match"
+          }
+        },
+        {
+          "name": "Similarity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"feature1\": \"{{feature1}}\",\n  \"feature2\": \"{{feature2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/similarity"
+          }
+        }
+      ]
+    }
+  ]
+}
