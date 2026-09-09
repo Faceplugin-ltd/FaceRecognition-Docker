@@ -230,7 +230,7 @@ Use the machine code from the environment you will run in production. **Docker a
 
 After activation, `GET /api/licenseStatus` reports what the key unlocks. The Gradio demo shows the same summary as **License:** at the top of the page.
 
-This App exposes **recognition** APIs only. Typical labels (license `license_level` 0 / 1 / 2):
+This App exposes **recognition** APIs only. Typical labels:
 
 - **Recognition only** / **Recognition + Liveness** — Detect / Quality / Match
 - **Liveness only** — recognition APIs stay unavailable on this App
