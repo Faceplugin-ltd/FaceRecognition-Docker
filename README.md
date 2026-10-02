@@ -9,14 +9,14 @@
 
 # FacePlugin Face Recognition SDK — Linux / Docker (Fully On-Premise)
 
-> **Ready in minutes:** `docker pull` → copy `FPMC1.…` from logs → `curl /api/health`.  
+> **Ready in minutes:** `docker pull` → copy machine code from logs → `curl /api/health`.  
 > Jump: [Quick Start](#quick-start) · [Start the API](#start-the-api) · [SDK License](#sdk-license) · [Setup on your own app](#setup-on-your-own-app) · [Try it](#try-it)
 
 ## Quick Start
 
 - [ ] Download and run the appropriate Docker image from [FacePlugin Docker Hub](https://hub.docker.com/r/faceplugin/face-recognition). [See Option A for details](#option-a--docker-hub-no-drive-download).
 - [ ] **Confirm it is running:** `curl -s http://127.0.0.1:8083/api/health` (no license needed yet)
-- [ ] [Contact us](#contact) with your machine code (`FPMC1.…`) to obtain a license key, then activate with `POST /api/activate` — [SDK License](#sdk-license)
+- [ ] [Contact us](#contact) with your machine code to obtain a license key, then activate with `POST /api/activate` — [SDK License](#sdk-license)
 - [ ] **Try it:** Postman, curl, or local Gradio demo on **9003** (`demo.py`)
 
 Docs: [https://doc.faceplugin.com](https://doc.faceplugin.com)
@@ -25,7 +25,7 @@ Docs: [https://doc.faceplugin.com](https://doc.faceplugin.com)
 
 FacePlugin **Face Recognition SDK for Linux / Docker** is a fully on-premise biometric engine for KYC, access control, and identity verification. It runs face detection (bounding box, landmarks, pose, attributes), ICAO-style face quality, template extraction, 1:1 matching, and feature similarity — all on your server.
 
-This repository is **standalone**. Pull Docker Hub (no Drive) or download the runtime into this repo and run — **no other FacePlugin repository is required**.
+This repository is **standalone**. Pull from Docker Hub and run — **no other FacePlugin repository is required**.
 
 All processing stays on your server. **No** biometric data is sent to FacePlugin cloud — built for banking, eKYC, and on-premise compliance workflows.
 
@@ -68,8 +68,8 @@ x
 | Step | What you need |
 | ---- | ------------- |
 | 1 | A Linux host **or** Docker (Desktop or Engine) |
-| 2 | Docker Hub pull does **not** need Drive. Fill `./lib/cpu/` only for Compose / `./run.sh` — see [Get the runtime](#get-the-runtime-options-b-and-c) |
-| 3 | Start **without** a license. Copy `FPMC1.…` from logs or `GET /api/machinecode`, send it to FacePlugin ([contact](#contact)), then activate with your license key |
+| 2 | Docker Hub pull does **not** need Drive — [see Option A](#option-a--docker-hub-no-drive-download) |
+| 3 | Start **without** a license. Copy machine code from logs or `GET /api/machinecode`, send it to FacePlugin ([contact](#contact)), then activate with your license key |
 
 You do **not** need a license to start the API once. Product endpoints unlock after you activate.
 
@@ -81,13 +81,12 @@ You do **not** need a license to start the API once. Product endpoints unlock af
 | RAM | 4 GB | 8 GB |
 | Disk | 4 GB | 8 GB |
 | OS (Docker) | Linux + Docker Engine | Ubuntu 22.04 / 24.04 |
-| OS (local `./run.sh`) | glibc **2.38+** (e.g. Ubuntu 24.04), Python 3.10+ | Ubuntu 24.04, Python 3.12 |
 
 ## Start the API
 
 You can start **without** a license — the server prints your machine code on startup.
 
-The API starts even if activation fails. Copy the **machine code** (`FPMC1.…`) from the log and send it to FacePlugin.
+The API starts even if activation fails. Copy the **machine code** from the log and send it to FacePlugin.
 
 <p align="center">
  <img src="https://raw.githubusercontent.com/Faceplugin-ltd/faceplugin-assets/main/screenshots/face-recognition/desktop/unactivated.png" alt="Docker logs: machine code printed, activation failed, Flask API still listening" width="900"/>
@@ -105,7 +104,7 @@ sudo docker run -d --name faceplugin-face-recognition \
   -v /etc/machine-id:/etc/machine-id:ro \
   faceplugin/face-recognition:latest
 sudo docker logs -f faceplugin-face-recognition
-# Look for the machine code line: FPMC1.…
+# Look for the machine code line in the logs
 ```
 
 ### Optional — Run multiple containers with one license
@@ -124,73 +123,15 @@ sudo docker run -d --name faceplugin-face-recognition-2 \
   faceplugin/face-recognition:latest
 ```
 
-You can then activate each container using the same `FP1.…` license key.
+You can then activate each container using the same license key.
 
 Note: On Docker Desktop (macOS/Windows), do not use the `/etc/machine-id` volume. Each container may require its own license.
 
-### Get the runtime (Options B and C)
 
-**Skip this if you used Docker Hub** (`docker pull` / `docker run`). Runtime is already inside the image.
+### Need Docker Compose or a native install?
 
-`./lib/cpu/` is empty on GitHub because native binaries and models are too large. Face Recognition Linux is **CPU-only** — there is no `gpu/` package.
+The steps above (Docker Hub) are enough for most teams. If you need **Docker Compose** with a local build, or a **native Linux** install without Docker Hub, [contact FacePlugin](#contact) and we will share the Drive runtime package and setup for your environment.
 
-**[FaceRecognition-Docker runtime (Google Drive)](https://drive.google.com/drive/folders/1NVq0psW8PLfEX58FWNE-RKFWfCZdOMmz)**
-
-1. Clone the repo (if you have not already):
-
-```bash
-git clone https://github.com/Faceplugin-ltd/FaceRecognition-Docker.git
-cd FaceRecognition-Docker
-```
-
-2. Open the Google Drive folder. Download **all files** (select all → Download, or zip).
-3. Put every file **directly** into `./lib/cpu/` — not inside a nested subfolder.
-
-```text
-FaceRecognition-Docker/
-└── lib/
-    └── cpu/
-        ├── libFaceRecognitionSDK.so
-        ├── libfar-eng.so
-        ├── far.fpk
-        └── ... (runtimes from Drive)
-```
-
-Wrong layout: `lib/cpu/SomeFolder/libFaceRecognitionSDK.so` (a nested folder breaks Docker build and local runs).
-
-```bash
-ls lib/cpu/libFaceRecognitionSDK.so
-ls lib/cpu/libfar-eng.so
-```
-
-If those paths exist, you are ready for Option B or C.
-
-### Option B — Building locally with Docker Compose
-
-Requires [./lib/cpu/ filled from Drive](#get-the-runtime-options-b-and-c).
-
-```bash
-cd FaceRecognition-Docker
-# macOS/Windows Docker Desktop: remove the /etc/machine-id volume from docker-compose.yml first
-sudo docker compose up --build -d
-sudo docker compose logs -f
-# Look for the machine code line: FPMC1.…
-# Detached Compose has no TTY — there is no license prompt. Activate with curl (below).
-```
-
-### Option C — Native Linux setup (No Docker)
-
-Requires [./lib/cpu/ filled from Drive](#get-the-runtime-options-b-and-c).
-
-```bash
-cd FaceRecognition-Docker
-pip3 install -r requirements.txt
-./run.sh
-# or: python3 app.py
-# The machine code (FPMC1.…) is printed in the terminal on startup.
-```
-
-API: **http://127.0.0.1:8083**
 
 ## SDK License
 
@@ -198,26 +139,19 @@ Licenses are **offline** and bound to your machine code. Offline cryptography is
 
 ### How to get a license
 
-1. **Start the server** ([above](#start-the-api)) — Docker or local. A license is not required for the first start.
-2. **Copy the machine code** from the startup log (container logs or the local terminal). It looks like `FPMC1.…`.
+1. **Start the server** ([above](#start-the-api)) with Docker Hub. A license is not required for the first start.
+2. **Copy the machine code** from container logs or `GET /api/machinecode`.
 3. **Send that machine code** to FacePlugin ([contact](#contact)). We will issue a license key for that code.
 4. **Activate** with the license key:
 
 ```bash
 # Paste your license key into ./license.txt (overwrite the file).
 
-# Docker Hub (A) and Compose (B) both expose the API on this host port.
-# `docker compose up -d` does not activate — the container is already running
-# with no TTY, so it will not re-read license.txt. POST the key instead:
+# Detached Docker will not re-read license.txt on its own — POST the key:
 curl -s -X POST http://127.0.0.1:8083/api/activate \
  -H 'Content-Type: text/plain' \
  --data-binary @license.txt
 
-# Compose alternative: after writing license.txt, restart so startup activates:
-# sudo docker compose restart
-
-# Local (Option C): stop the process (Ctrl+C), then:
-./run.sh
 ```
 
 <p align="center">
@@ -314,7 +248,7 @@ First, obtain the machine code for activation and request a license based on the
 import sdk
 
 machine_code = sdk.get_machine_code()
-print("machineCode:", machine_code) # FPMC1.…
+print("machineCode:", machine_code) # machine code
 ```
 
 #### Step Two
