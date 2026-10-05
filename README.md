@@ -9,17 +9,21 @@
 
 # FacePlugin Face Recognition SDK — Linux / Docker (Fully On-Premise)
 
-> **Ready in minutes:** `docker pull` → copy machine code from logs → `curl /api/health`.  
+> **Fastest:** `docker pull faceplugin/face-recognition:latest` → run → copy machine code → activate.  
+> **Local Linux:** put runtime under `lib/cpu/` → `./run.sh` → activate.  
+> **Docker Hub:** no Drive download. **Local:** Google Drive → `lib/cpu/` — see Option B.  
 > Jump: [Quick Start](#quick-start) · [Start the API](#start-the-api) · [SDK License](#sdk-license) · [Setup on your own app](#setup-on-your-own-app) · [Try it](#try-it)
 
 ## Quick Start
 
-- [ ] Download and run the appropriate Docker image from [FacePlugin Docker Hub](https://hub.docker.com/r/faceplugin/face-recognition). [See Option A for details](#option-a--docker-hub-no-drive-download).
+- [ ] **Docker (recommended):** `docker pull faceplugin/face-recognition:latest` then `docker run` — [Option A](#option-a--docker-hub-no-drive-download)
+- [ ] **Or local:** download CPU runtime into `lib/cpu/` — [Option B](#option-b--local-linux-runsh), then `./run.sh` — API on **8083**
 - [ ] **Confirm it is running:** `curl -s http://127.0.0.1:8083/api/health` (no license needed yet)
 - [ ] [Contact us](#contact) with your machine code to obtain a license key, then activate with `POST /api/activate` — [SDK License](#sdk-license)
-- [ ] **Try it:** Postman, curl, or local Gradio demo on **9003** (`demo.py`)
+- [ ] **Try it:** Postman, curl, or local Gradio demo
 
 Docs: [https://doc.faceplugin.com](https://doc.faceplugin.com)
+
 
 ## Introduction
 
@@ -62,13 +66,12 @@ Test with Postman, curl, or the local Gradio demo (`demo.py`) covering Detect, Q
 | Windows (Liveness) | [FaceLivenessDetection-Windows](https://github.com/Faceplugin-ltd/FaceLivenessDetection-Windows) |
 | Linux / Docker (Liveness) | [FaceLivenessDetection-Docker](https://github.com/Faceplugin-ltd/FaceLivenessDetection-Docker) |
 
-x
 ## Before you start
 
 | Step | What you need |
 | ---- | ------------- |
 | 1 | A Linux host **or** Docker (Desktop or Engine) |
-| 2 | Docker Hub pull does **not** need Drive — [see Option A](#option-a--docker-hub-no-drive-download) |
+| 2 | Docker Hub **or** Google Drive runtime in `./lib/cpu/` — see [Start the API](#start-the-api) |
 | 3 | Start **without** a license. Copy machine code from logs or `GET /api/machinecode`, send it to FacePlugin ([contact](#contact)), then activate with your license key |
 
 You do **not** need a license to start the API once. Product endpoints unlock after you activate.
@@ -94,7 +97,7 @@ The API starts even if activation fails. Copy the **machine code** from the log 
 
 ### Option A — Docker Hub (no Drive download)
 
-Runtime is already inside the image.
+Runtime is already inside the image. No Google Drive step.
 
 ```bash
 sudo docker pull faceplugin/face-recognition:latest
@@ -107,30 +110,63 @@ sudo docker logs -f faceplugin-face-recognition
 # Look for the machine code line in the logs
 ```
 
-### Optional — Run multiple containers with one license
+On Docker Desktop (macOS/Windows) omit the `/etc/machine-id` volume.
 
-You only need this section if you want to run multiple Face Recognition containers on the same Linux host.
+### Run multiple containers
 
-On Linux, mount `/etc/machine-id` into each container so they use the same machine code. Each container must have a different container name and host port.
+To run multiple containers on one Linux host with a shared machine code / license, see the docs:
 
-For example:
+[https://doc.faceplugin.com/face-recognition-sdk/server-sdk/face-recognition-linux-sdk#run-multiple-containers](https://doc.faceplugin.com/face-recognition-sdk/server-sdk/face-recognition-linux-sdk#run-multiple-containers)
+
+### Option B — Local Linux (`./run.sh`)
+
+Requires the Google Drive runtime under `lib/cpu/`. Needs glibc **2.38+** (for example Ubuntu 24.04).
+
+#### Get the runtime
+
+The `./lib/cpu/` tree is empty on GitHub because native binaries and model files are too large. This product is **CPU-only**.
+
+**[FaceRecognition Linux runtime (Google Drive)](https://drive.google.com/drive/folders/1NVq0psW8PLfEX58FWNE-RKFWfCZdOMmz)**
+
+1. Clone the repo (if you have not already):
 
 ```bash
-sudo docker run -d --name faceplugin-face-recognition-2 \
-  --shm-size=2gb --privileged \
-  -p 8084:8083 \
-  -v /etc/machine-id:/etc/machine-id:ro \
-  faceplugin/face-recognition:latest
+git clone https://github.com/Faceplugin-ltd/FaceRecognition-Docker.git
+cd FaceRecognition-Docker
 ```
 
-You can then activate each container using the same license key.
+2. Open the Google Drive folder above.
+3. Download **all files** in that folder.
+4. Put every file **directly** into `./lib/cpu/` — not inside a nested subfolder.
 
-Note: On Docker Desktop (macOS/Windows), do not use the `/etc/machine-id` volume. Each container may require its own license.
+```text
+FaceRecognition-Docker/
+└── lib/
+    └── cpu/
+        ├── libFaceRecognitionSDK.so
+        ├── libfar-eng.so
+        ├── far.fpk
+        └── ... (other runtimes from Drive)
+```
 
+Wrong layout: `lib/cpu/SomeFolder/libFaceRecognitionSDK.so`.
 
-### Need Docker Compose or a native install?
+```bash
+ls lib/cpu/libFaceRecognitionSDK.so
+ls lib/cpu/libfar-eng.so
+ls lib/cpu/far.fpk
+```
 
-The steps above (Docker Hub) are enough for most teams. If you need **Docker Compose** with a local build, or a **native Linux** install without Docker Hub, [contact FacePlugin](#contact) and we will share the Drive runtime package and setup for your environment.
+#### Run
+
+```bash
+pip3 install -r requirements.txt
+./run.sh
+```
+
+API: **http://127.0.0.1:8083**
+
+Copy the **machine code** from the terminal (or `GET /api/machinecode`), then activate with `POST /api/activate` or paste the license key when prompted.
 
 
 ## SDK License
@@ -139,7 +175,7 @@ Licenses are **offline** and bound to your machine code. Offline cryptography is
 
 ### How to get a license
 
-1. **Start the server** ([above](#start-the-api)) with Docker Hub. A license is not required for the first start.
+1. **Start the server** ([above](#start-the-api)) with Docker Hub or local `./run.sh`. A license is not required for the first start.
 2. **Copy the machine code** from container logs or `GET /api/machinecode`.
 3. **Send that machine code** to FacePlugin ([contact](#contact)). We will issue a license key for that code.
 4. **Activate** with the license key:
