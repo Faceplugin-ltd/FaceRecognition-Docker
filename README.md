@@ -20,7 +20,8 @@
 - [Contact us](#contact) with your machine code to obtain a license key, then activate with `POST /api/activate` — [Activate your license](#activate-your-license)
 - **Try it:** Postman, curl, or local Gradio demo on **9003** (`python3 demo.py`)
 
-Docs: [doc.faceplugin.com](https://doc.faceplugin.com)
+Docs: [doc.faceplugin.com](https://doc.faceplugin.com)\
+Try online: [Hugging Face Space](https://huggingface.co/spaces/FacePlugin-Ltd/FaceRecognition-LivenessDetection-SDK)
 
 
 ## Introduction
