@@ -1,4 +1,4 @@
-# FaceRecognitionSDK-Linux — combined recognition + liveness (same repo)
+# FaceRecognitionSDK-fast-Linux — fast edition (recognition + liveness)
 # Native libs are linux/amd64; image runs on any Docker host (Win/Mac/Linux).
 # Before build: download Drive folder contents into ./lib/cpu/ (see lib/README.md)
 # Bookworm is glibc 2.36; native SDK libs need GLIBC_2.38+ (Debian Trixie).
@@ -22,7 +22,7 @@ ENV LD_PRELOAD=/root/facesdk/lib/cpu/libFaceRecognitionSDK.so
 ENV PORT=8083
 RUN chmod +x ./run.sh \
     && test -f ./lib/cpu/libFaceRecognitionSDK.so \
-    && test -f ./lib/cpu/libfacerec.so \
+    && test -f ./lib/cpu/libfar-eng.so \
     && test -f ./lib/cpu/libfar-sec.so \
     && test -f ./lib/cpu/far.fpk \
     && test -f ./lib/cpu/libfal-eng.so \

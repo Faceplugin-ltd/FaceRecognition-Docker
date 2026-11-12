@@ -2,10 +2,10 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-LIB_DRIVE="https://drive.google.com/drive/folders/1Lzz3eb_JMDZ0xyGtnGzxsUmMbgaYzin6?usp=sharing"
+LIB_DRIVE="https://drive.google.com/drive/folders/11XBHzGVosF7742_LdToXG4dZ160uYQCu?usp=sharing"
 
 if [[ ! -f lib/cpu/libFaceRecognitionSDK.so ]] \
-  || [[ ! -f lib/cpu/libfacerec.so ]] \
+  || [[ ! -f lib/cpu/libfar-eng.so ]] \
   || [[ ! -f lib/cpu/far.fpk ]] \
   || [[ ! -f lib/cpu/libfal-eng.so ]] \
   || [[ ! -f lib/cpu/fal.fpk ]]; then
