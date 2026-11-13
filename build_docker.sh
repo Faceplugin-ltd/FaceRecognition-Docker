@@ -7,12 +7,14 @@ TAG="${1:-faceplugin/face-recognition-liveness-sdk:local}"
 LIB_DRIVE="https://drive.google.com/drive/folders/11XBHzGVosF7742_LdToXG4dZ160uYQCu?usp=sharing"
 
 if [[ ! -f lib/cpu/libFaceRecognitionSDK.so ]] \
-  || [[ ! -f lib/cpu/libfar-eng.so ]] \
+  || [[ ! -f lib/cpu/libfacerec.so ]] \
   || [[ ! -f lib/cpu/far.fpk ]] \
   || [[ ! -f lib/cpu/libfal-eng.so ]] \
-  || [[ ! -f lib/cpu/fal.fpk ]]; then
+  || [[ ! -f lib/cpu/fal.fpk ]] \
+  || [[ ! -f lib/cpu/libonnxruntime.so ]] \
+  || [[ ! -f lib/cpu/libonnxruntime_providers_shared.so ]]; then
   echo "ERROR: ./lib/cpu/ is incomplete."
-  echo "Need: libFaceRecognitionSDK.so, libfar-eng.so, far.fpk, libfal-eng.so, fal.fpk"
+  echo "Need: libFaceRecognitionSDK.so, libfacerec.so, far.fpk, libfal-eng.so, fal.fpk, libonnxruntime.so, libonnxruntime_providers_shared.so"
   echo "Download all files from Google Drive into ./lib/cpu/:"
   echo "  $LIB_DRIVE"
   exit 1

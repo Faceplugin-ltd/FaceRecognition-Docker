@@ -22,12 +22,12 @@ ENV LD_PRELOAD=/root/facesdk/lib/cpu/libFaceRecognitionSDK.so
 ENV PORT=8083
 RUN chmod +x ./run.sh \
     && test -f ./lib/cpu/libFaceRecognitionSDK.so \
-    && test -f ./lib/cpu/libfar-eng.so \
-    && test -f ./lib/cpu/libfar-sec.so \
+    && test -f ./lib/cpu/libfacerec.so \
     && test -f ./lib/cpu/far.fpk \
     && test -f ./lib/cpu/libfal-eng.so \
     && test -f ./lib/cpu/fal.fpk \
-    && test -f ./lib/cpu/libonnxruntime.so.1
+    && test -f ./lib/cpu/libonnxruntime.so \
+    && test -f ./lib/cpu/libonnxruntime_providers_shared.so
 
 CMD ["./run.sh"]
 EXPOSE 8083

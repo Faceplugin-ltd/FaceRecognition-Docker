@@ -7,7 +7,9 @@ https://drive.google.com/drive/folders/11XBHzGVosF7742_LdToXG4dZ160uYQCu?usp=sha
 Expected files (CPU):
 
 - `libFaceRecognitionSDK.so`
-- `libfar-eng.so`, `libfar-sec.so`, `libonnxruntime.so.1`, `far.fpk`
+- `libfacerec.so`
+- `libonnxruntime.so`, `libonnxruntime_providers_shared.so`
+- `far.fpk`
 - `libfal-eng.so`, `fal.fpk`
 
 Then `./run.sh` or `docker compose up --build`.
