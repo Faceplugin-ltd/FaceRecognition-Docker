@@ -52,7 +52,6 @@ if [[ ! -f lib/cpu/libFaceRecognitionSDK.so ]] \
   || [[ "$onnx_ok" -ne 1 ]] \
   || [[ ! -f lib/cpu/libonnxruntime_providers_shared.so ]]; then
   echo "ERROR: ./lib/cpu/ is incomplete."
-  echo "Export Face-Recognition-Linux-SDK or Face-Recognition-Plus-Linux-SDK into ./lib/cpu/."
   echo "Need libFaceRecognitionSDK.so, libfacerec.so, far.fpk, libonnxruntime.so"
   echo "(or libonnxruntime.so.1), and libonnxruntime_providers_shared.so."
   echo "Download all files from Google Drive into ./lib/cpu/:"

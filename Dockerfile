@@ -1,4 +1,4 @@
-# Face-Recognition-Linux — recognition-only (Normal / 3DiVi)
+# Face-Recognition-Linux — recognition-only
 # Native libs are linux/amd64; image runs on any Docker host (Win/Mac/Linux).
 # Before build: download Drive folder contents into ./lib/cpu/ (see lib/README.md)
 # Bookworm is glibc 2.36; native SDK libs need GLIBC_2.38+ (Debian Trixie).
